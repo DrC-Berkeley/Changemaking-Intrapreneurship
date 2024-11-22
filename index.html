@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .decks-container {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: auto;
+        }
+        .deck {
+            width: 350px;
+            height: 400px;
+            cursor: pointer;
+            text-align: center;
+            padding: 30px;
+            border-radius: 20px;
+            background: white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        .deck:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+        .deck-1 { border-top: 8px solid #003262; /* Berkeley Blue */ }
+        .deck-2 { border-top: 8px solid #FDB515; /* California Gold */ }
+        .deck-3 { border-top: 8px solid #C4820E; /* Berkeley Gold */ }
+        
+        .deck-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #003262;
+        }
+        .deck-emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+        .deck-description {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+        .start-button {
+            background: #003262;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: background 0.2s;
+            margin-top: auto;
+        }
+        .start-button:hover {
+            background: #004B8F;
+        }
+        .card-display {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            text-align: center;
+        }
+        .card h2 {
+            color: #003262;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+        }
+        .card p {
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin: 25px 0;
+        }
+        .close-button {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            border: none;
+            background: none;
+            font-size: 2em;
+            cursor: pointer;
+            color: #003262;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 20px;
+        }
+        .nav-button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #003262;
+            color: white;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.2s;
+            min-width: 120px;
+        }
+        .nav-button:hover:not(:disabled) {
+            background: #004B8F;
+        }
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="decks-container">
+        <div class="deck deck-1" onclick="showDeck(1)">
+            <div class="deck-emoji">💡</div>
+            <div class="deck-title">Understanding Intrapreneurship</div>
+            <div class="deck-description">Explore the basics of creating change from within</div>
+            <button class="start-button">Start Set 1</button>
+        </div>
+        
+        <div class="deck deck-2" onclick="showDeck(2)">
+            <div class="deck-emoji">🔄</div>
+            <div class="deck-title">Exploring Change Opportunities</div>
+            <div class="deck-description">Identify problems and existing resources</div>
+            <button class="start-button">Start Set 2</button>
+        </div>
+        
+        <div class="deck deck-3" onclick="showDeck(3)">
+            <div class="deck-emoji">🎯</div>
+            <div class="deck-title">Connecting to Your Final Project</div>
+            <div class="deck-description">Frame your project through intrapreneurship</div>
+            <button class="start-button">Start Set 3</button>
+        </div>
+    </div>
+
+    <script>
+        const decks = {
+            1: [
+                { text: "What's the difference between starting something new and improving what exists?", emoji: "🆕" },
+                { text: "When have you seen someone make a big impact without being 'in charge'?", emoji: "👥" },
+                { text: "What skills do you think someone needs to create change from within?", emoji: "🛠️" },
+                { text: "How can you lead change without formal authority?", emoji: "🌟" },
+                { text: "What makes it easier or harder to improve existing systems?", emoji: "⚖️" },
+                { text: "Why might improving existing systems be better than starting from scratch?", emoji: "🔄" }
+            ],
+            2: [
+                { text: "What's something in your daily student life that could work better?", emoji: "📚" },
+                { text: "Who might already be working on similar problems?", emoji: "🤝" },
+                { text: "What resources exist that could help address this problem?", emoji: "💪" },
+                { text: "Who would benefit if this problem was solved?", emoji: "🎯" },
+                { text: "What's the smallest change that could make a difference?", emoji: "✨" },
+                { text: "Who would you need to talk to first about this problem?", emoji: "💭" }
+            ],
+            3: [
+                { text: "What problem interests you enough to explore for your final?", emoji: "🔍" },
+                { text: "Who could be part of your mini-PAR focus group?", emoji: "👥" },
+                { text: "What existing efforts or initiatives relate to your problem?", emoji: "🔄" },
+                { text: "How could you start small with exploring this problem?", emoji: "🌱" },
+                { text: "What's one question you'd like to ask others about this problem?", emoji: "❓" },
+                { text: "How might existing resources help address this problem?", emoji: "🛠️" }
+            ]
+        };
+
+        let currentDeck = 1;
+        let currentCard = 0;
+
+        function celebrateCompletion() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function showDeck(deckNumber) {
+            currentDeck = deckNumber;
+            currentCard = 0;
+            showCard();
+        }
+
+        function showCard() {
+            const cardContent = decks[currentDeck][currentCard];
+            const display = document.createElement('div');
+            display.className = 'card-display';
+            display.innerHTML = `
+                <div class="card">
+                    <button class="close-button" onclick="closeCard()">×</button>
+                    <h2>Card ${currentCard + 1}</h2>
+                    <div style="font-size: 3em; margin: 20px 0;">${cardContent.emoji}</div>
+                    <p>${cardContent.text}</p>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="previousCard()" ${currentCard === 0 ? 'disabled' : ''}>Previous</button>
+                        <button class="nav-button" onclick="nextCard()" ${currentCard === decks[currentDeck].length - 1 ? 'disabled' : ''}>Next</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(display);
+        }
+
+        function closeCard() {
+            const display = document.querySelector('.card-display');
+            if (display) display.remove();
+        }
+
+        function nextCard() {
+            if (currentCard < decks[currentDeck].length - 1) {
+                currentCard++;
+                closeCard();
+                showCard();
+            } else if (currentCard === decks[currentDeck].length - 1) {
+                celebrateCompletion();
+                closeCard();
+            }
+        }
+
+        function previousCard() {
+            if (currentCard > 0) {
+                currentCard--;
+                closeCard();
+                showCard();
+            }
+        }
+    </script>
+</body>
+</html>
